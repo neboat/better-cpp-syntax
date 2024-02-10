@@ -332,14 +332,14 @@ grammar = Grammar.new(
     variable_name_without_bounds = identifier
     # word bounds are inefficient, but they are accurate
     variable_name = variableBounds[variable_name_without_bounds]
-    
+
     # now import doxygen
     require_relative PathFor[:pattern]["doxygen"]
     grammar[:comments] = [
         *doxygen(variable_name),
         *grammar[:comments]
     ]
-    
+
 #
 # Constants
 #

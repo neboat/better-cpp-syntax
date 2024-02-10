@@ -1,10 +1,10 @@
 require_relative PathFor[:textmate_tools]
 
-# 
+#
 # C++ specific tokens
-# 
-    # TODO: 
-        # finish the specifiers https://en.cppreference.com/w/cpp/language/declarations 
+#
+    # TODO:
+        # finish the specifiers https://en.cppreference.com/w/cpp/language/declarations
         # https://en.cppreference.com/w/cpp/language/declarations
         # look at https://en.cppreference.com/w/cpp/language/function to implement better member function syntax
 
@@ -197,7 +197,7 @@ tokens = [
     { representation: "struct"               , name: "struct"          , isTypeCreator: true},
     { representation: "union"                , name: "union"           , isTypeCreator: true},
     { representation: "enum"                 , name: "enum"            , isTypeCreator: true},
-    # storage specifiers https://en.cppreference.com/w/cpp/language/declarations 
+    # storage specifiers https://en.cppreference.com/w/cpp/language/declarations
     { representation: "const"                , name: "const"            , isSpecifier: true, isStorageSpecifier: true },
     { representation: "static"               , name: "static"           , isSpecifier: true, isStorageSpecifier: true },
     { representation: "thread_local"         , name: "thread_local"     , isSpecifier: true, isStorageSpecifier: true },
@@ -247,24 +247,24 @@ tokens = [
     { representation: "__has_include"         , name: "__has_include"          , isPreprocessorDirective: true },
     { representation: "__has_cpp_attribute"   , name: "__has_cpp_attribute"    , isPreprocessorDirective: true },
 
-    # 
+    #
     # misc
-    # 
+    #
     # https://en.cppreference.com/w/cpp/keyword
     { representation: "this"            , name: "this"          },
     { representation: "template"        , name: "template"      },
     { representation: "namespace"       , name: "namespace"     },
     { representation: "using"           , name: "using"         },
     { representation: "operator"        , name: "operator"      },
-    # 
+    #
     { representation: "typedef"         , name: "typedef"       , isCurrentlyAMiscKeyword: true },
     { representation: "decltype"        , name: "decltype"      , isSpecifier: true,  isFunctionLike: true },
     { representation: "constinit"       , name: "constinit"     , isSpecifier: true , isCurrentlyAMiscKeyword: true},
     { representation: "typename"        , name: "typename"      },
-    # 
+    #
     { representation: "asm"                        , name: "asm"                        },
     { representation: "__asm__"                    , name: "__asm__"                    },
-    # 
+    #
     { representation: "concept"                    , name: "concept"                    , isCurrentlyAMiscKeyword: true },
     { representation: "requires"                   , name: "requires"                   , isCurrentlyAMiscKeyword: true },
     { representation: "export"                     , name: "export"                     , isCurrentlyAMiscKeyword: true },
@@ -278,16 +278,25 @@ tokens = [
     { representation: "module"                     , name: "module"                     , isCurrentlyAMiscKeyword: true },
     { representation: "reflexpr"                   , name: "reflexpr"                   },
     { representation: "synchronized"               , name: "synchronized"               },
-    # 
+    #
     { representation: "audit"                      , name: "audit"                      , isSpecialIdentifier: true , isValidFunctionName: true},
     { representation: "axiom"                      , name: "axiom"                      , isSpecialIdentifier: true , isValidFunctionName: true},
     { representation: "transaction_safe"           , name: "transaction_safe"           , isSpecialIdentifier: true , isValidFunctionName: true},
     { representation: "transaction_safe_dynamic"   , name: "transaction_safe_dynamic"   , isSpecialIdentifier: true , isValidFunctionName: true},
+
+    #
+    # OpenCilk
+    #
+    { representation: "cilk_for"             , name: "cilk_for"                       , isControlFlow: true, requiresParentheseBlockImmediately: true, },
+    { representation: "cilk_spawn"           , name: "cilk_spawn"                     , isControlFlow: true,                                           canAppearBeforeLambdaCapture: true },
+    { representation: "cilk_scope"           , name: "cilk_scope"                     , isControlFlow: true,                                           },
+    { representation: "cilk_sync"            , name: "cilk_sync"                      , isControlFlow: true,                                           },
+    { representation: "cilk_reducer"         , name: "cilk_reducer" , isSpecifier: true, isStorageSpecifier: true },
 ]
 
 
 
-@cpp_tokens = TokenHelper.new tokens, for_each_token: ->(each) do 
+@cpp_tokens = TokenHelper.new tokens, for_each_token: ->(each) do
     # isSymbol, isWordish
     if each[:representation] =~ /[a-zA-Z0-9_]/
         each[:isWordish] = true
@@ -302,7 +311,7 @@ tokens = [
     if each[:name] =~ /\bbitwise\b/
         each[:isBitwise] = true
     end
-    
+
     if each[:isTypeSpecifier] or each[:isStorageSpecifier]
         each[:isPossibleStorageSpecifier] = true
     end
@@ -327,7 +336,7 @@ end
     { representation: "FILE"                       , name: "FILE"                       , belongsToStdio: true , isType: true},
     { representation: "fpos_t"                     , name: "fpos_t"                     , belongsToStdio: true , isType: true},
     { representation: "size_t"                     , name: "size_t"                     , belongsToStdio: true , isType: true},
-    
+
     # pthread types
     # TODO: I'm not sure if pthread is actually a support type or if it is part of the language spec, I'd assume support
     { representation: "pthread_t"            , name: "pthread_t"            , isType: true , isPthreadType: true },
